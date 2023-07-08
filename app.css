@@ -1,0 +1,51 @@
+body{
+	background-color: #FCEAC7;
+	text-align: center;
+	font-family: 'Arial', sans-serif;
+}
+h1{
+	color: #FF6B6B
+}
+p{
+	color: #4ECDC4;
+}
+input[type="text"], button{
+	padding: 8px;
+	font-size: 16px;
+	border: none;
+	background-color: #FF6B6B;
+	color: white;
+	cursor: pointer;
+}
+
+input[type='text']{
+	width: 150px;
+}
+
+#message{
+	margin-top: 20px;
+	font-weight: bold
+}
+#wordDisplay{
+	font-size: 24px;
+	margin: 20px 0;
+	letter-spacing: 8px
+}
+
+#timer{
+	font-size: 18px;
+	margin-top: 10px;
+	color: #FF6B6B;
+}
+
+#score{
+	font-family: 18px;
+	margin-top: 10px;
+	color: #4ECDC4
+
+}
+}
+.colordepalabra{
+	color: black;
+	font-weight: bold;
+}

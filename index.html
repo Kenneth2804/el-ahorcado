@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ADIVINA LA PALABRA</title>
+<link rel="stylesheet" type="text/css" href="app.css">
+</head>
+<body>
+
+
+<h1>Juego de adivinar La Palabra de programación</h1>
+<p class="colordepalabra">Adivina la Palabra: <span id="wordDisplay"></span></p>
+<p>Intenta Adivinar una letra: </p>
+<input type="text" id="guessInput" disabled>
+<button onclick="checkGuess()"> ADIVINAR</button>
+<p id="message"></p>
+<p id="timer"></p>
+<p id="score">Puntos: <span id="scoreValue">0</span></p>
+<button onclick="restartGame()" id="restartButton" disabled> Jugar De nuevo</button>
+
+
+  <script>
+    // Palabras para adivinar
+    const words = ['javascript', 'programacion', 'html', 'css', 'desarrollo'];
+
+    // Seleccionar una palabra al azar
+    let randomIndex;
+    let targetWord;
+
+    // Crear un arreglo para rastrear las letras adivinadas
+    let guessedLetters;
+
+    // Estado del juego
+    let gameActive = false;
+
+    // Puntuación
+    let score = 0;
+
+    // Temporizador
+    let timeRemaining = 60;
+    let timeout;
+
+    // Iniciar el juego
+    function startGame() {
+      randomIndex = Math.floor(Math.random() * words.length);
+      targetWord = words[randomIndex];
+      guessedLetters = new Array(targetWord.length).fill('_');
+
+      const wordDisplay = document.getElementById('wordDisplay');
+      wordDisplay.textContent = guessedLetters.join(' ');
+
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = '';
+
+      const timerElement = document.getElementById('timer');
+      timerElement.textContent = `Tiempo restante: ${getFormattedTime(timeRemaining)}`;
+
+      const scoreElement = document.getElementById('scoreValue');
+      scoreElement.textContent = score.toString();
+
+      gameActive = true;
+      enableInput();
+      disableRestartButton();
+
+      startTimer();
+    }
+
+    function checkGuess() {
+      if (!gameActive) {
+        return;
+      }
+
+      const guessInput = document.getElementById('guessInput');
+      const guess = guessInput.value.toLowerCase();
+
+      let correctGuess = false;
+      for (let i = 0; i < targetWord.length; i++) {
+        if (targetWord[i] === guess) {
+          guessedLetters[i] = guess;
+          correctGuess = true;
+        }
+      }
+
+      const wordDisplay = document.getElementById('wordDisplay');
+      wordDisplay.textContent = guessedLetters.join(' ');
+
+      if (guessedLetters.join('') === targetWord) {
+        score++;
+        const scoreElement = document.getElementById('scoreValue');
+        scoreElement.textContent = score.toString();
+
+        showResult('¡Correcto! Has adivinado la palabra.');
+
+        if (words.length > 1) {
+          words.splice(randomIndex, 1);
+          targetWord = words[randomIndex];
+          guessedLetters = new Array(targetWord.length).fill('_');
+          wordDisplay.textContent = guessedLetters.join(' ');
+        } else {
+          gameActive = false;
+          enableRestartButton();
+        }
+      } else if (correctGuess) {
+        showResult('¡Correcto! Has adivinado una letra.');
+      } else {
+        showResult('Incorrecto. Intenta de nuevo.');
+      }
+
+      guessInput.value = '';
+    }
+
+    function showResult(message) {
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = message;
+    }
+
+    function startTimer() {
+      const timerElement = document.getElementById('timer');
+
+      timeout = setInterval(() => {
+        timeRemaining--;
+
+        if (timeRemaining <= 0) {
+          clearInterval(timeout);
+          showResult('¡Has perdido! Se acabó el tiempo.');
+          gameActive = false;
+          revealWord();
+          enableRestartButton();
+        }
+
+        timerElement.textContent = `Tiempo restante: ${getFormattedTime(timeRemaining)}`;
+      }, 1000); // 1 segundo (1000 ms)
+    }
+
+    function enableInput() {
+      const guessInput = document.getElementById('guessInput');
+      guessInput.disabled = false;
+      guessInput.focus();
+    }
+
+    function restartGame() {
+      clearInterval(timeout);
+      timeRemaining = 60;
+      score = 0;
+      words.splice(0);
+      words.push('javascript', 'programacion', 'html', 'css', 'desarrollo');
+      startGame();
+    }
+
+    function revealWord() {
+      const wordDisplay = document.getElementById('wordDisplay');
+      wordDisplay.textContent = targetWord;
+    }
+
+    function enableRestartButton() {
+      const restartButton = document.getElementById('restartButton');
+      restartButton.disabled = false;
+    }
+
+    function disableRestartButton() {
+      const restartButton = document.getElementById('restartButton');
+      restartButton.disabled = true;
+    }
+
+    function getFormattedTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    }
+
+    // Iniciar el juego al cargar la página
+    window.onload = startGame;
+  </script>
+</body>
+</html>
+
+</body>
+</html>
